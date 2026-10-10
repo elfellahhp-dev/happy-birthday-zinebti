@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift Just For You 💗</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0d060a;
+            color: #fce4ec;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #180a12;
+            border: 1px solid #381225;
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(233, 30, 99, 0.15);
+            position: relative;
+        }
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tag {
+            font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #ff80ab;
+            background: rgba(255, 128, 171, 0.1); padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 15px;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; margin-bottom: 10px; }
+        h1 span { color: #ff4081; font-style: italic; }
+        p.subtitle { font-size: 13px; color: #b39ddb; margin-bottom: 25px; line-height: 1.6; }
+
+        .btn-pink {
+            background: linear-gradient(45deg, #e91e63, #ff4081);
+            color: white; border: none; padding: 12px 28px; font-size: 14px; font-weight: 600;
+            border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+            transition: all 0.3s; margin-top: 15px; display: inline-block;
+        }
+        .btn-pink:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6); }
+
+        .cake-box { font-size: 70px; margin: 20px 0; position: relative; display: inline-block; }
+        .flame { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-size: 24px; transition: opacity 0.3s; }
+        .flame.off { opacity: 0; }
+
+        .envelope {
+            width: 140px; height: 100px; background: #2c0e1e; border: 2px solid #ff4081;
+            margin: 20px auto; border-radius: 10px; cursor: pointer; position: relative;
+            display: flex; justify-content: center; align-items: center; font-size: 30px; transition: 0.3s;
+        }
+        .envelope:hover { transform: scale(1.05); }
+
+        .letter-content {
+            background: #230d18; border: 1px solid #4a152d; border-radius: 16px; padding: 20px;
+            text-align: left; font-size: 13px; line-height: 1.8; color: #f8bbd0; max-height: 350px; overflow-y: auto;
+            white-space: pre-line; margin-bottom: 20px;
+        }
+
+        .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .grid-2x2 img { width: 100%; height: 140px; object-fit: cover; border-radius: 14px; border: 1px solid #ff4081; }
+
+        .player-card {
+            background: #230d18; border-radius: 16px; padding: 20px; border: 1px solid #381225; margin: 20px 0;
+        }
+        .player-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
+
+        .question-box { position: relative; min-height: 120px; margin-top: 20px; }
+        .btn-no {
+            background: #2c0e1e; color: #ff80ab; border: 1px solid #ff4081; padding: 10px 24px;
+            border-radius: 30px; cursor: pointer; position: absolute; transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STEP 1: Welcome -->
+    <div class="step active" id="step1">
+        <span class="tag">✦ Something special is waiting ✦</span>
+        <h1>A Gift <br><span>just for You</span> 👑</h1>
+        <p class="subtitle">"Today is a day as beautiful as you are. I've prepared a little digital surprise to celebrate your special moment."</p>
+        <button class="btn-pink" onclick="nextStep(2)">Open Your Surprise 🎁</button>
+    </div>
+
+    <!-- STEP 2: Cake & Candle -->
+    <div class="step" id="step2">
+        <div class="cake-box">
+            <span class="flame" id="flame">🔥</span>
+            🎂
+        </div>
+        <h1 id="cakeTitle">Make a wish, <br><span>Habibty 👑</span></h1>
+        <button class="btn-pink" id="candleBtn" onclick="blowCandle()">Blow the Candle 🌬️</button>
+    </div>
+
+    <!-- STEP 3: Secret Letter Envelope -->
+    <div class="step" id="step3">
+        <span class="tag">✦ You have a secret letter ✦</span>
+        <h1>Happy Birthday, <br><span>queen! 🎂</span></h1>
+        <div class="envelope" onclick="nextStep(4)">💌</div>
+        <p class="subtitle">Click to open your letter 👆</p>
+    </div>
+
+    <!-- STEP 4: The Letter -->
+    <div class="step" id="step4">
+        <h2 style="font-family:'Playfair Display'; color:#ff4081; margin-bottom:15px;">To my favorite person,</h2>
+        <div class="letter-content">
+Happy birthday to my beautiful girl! 🎂💗🦋
+
+I hope this new chapter of your life brings you endless happiness, genuine love, beautiful surprises, and everything your heart has been wishing for. You deserve all the wonderful things this world has to offer.
+
+I just want you to know how grateful I am to have you in my life. Having a friend like you is such a beautiful blessing, and I hope you never forget how special you are.
+
+No matter how much life changes or how busy we get, I hope we always find our way back to each other. Thank you for being you!
+
+Happy birthday, sweetheart! 🥹🎀 I love you so much!
+        </div>
+        <button class="btn-pink" onclick="nextStep(5)">See the next surprise ➔</button>
+    </div>
+
+    <!-- STEP 5: Captured Moments -->
+    <div class="step" id="step5">
+        <h1>Captured <span>Moments</span> 📸</h1>
+        <p class="subtitle">Tap a memory to reveal</p>
+        <div class="grid-2x2">
+            <img src="our-photo1.jpg.jpeg" onerror="this.src='our-photo1.jpg'" alt="Memory 1">
+            <img src="our-photo2.jpg.jpeg" onerror="this.src='our-photo2.jpg'" alt="Memory 2">
+            <img src="zineb1.jpeg" onerror="this.src='zineb1.jpg'" alt="Zineb 1">
+            <img src="zineb2.jpeg" onerror="this.src='zineb2.jpg'" alt="Zineb 2">
+        </div>
+        <button class="btn-pink" onclick="nextStep(6)">Hear our song 🎵</button>
+    </div>
+
+    <!-- STEP 6: Music Player -->
+    <div class="step" id="step6">
+        <div class="player-card">
+            <img src="our-photo2.jpg.jpeg" onerror="this.src='our-photo2.jpg'" class="player-img" alt="Our Cover">
+            <h3>Our Special Song 💖</h3>
+            <p style="font-size:12px; color:#ff80ab; margin-bottom:15px;">Dedicated to you</p>
+            <audio id="audioPlayer" controls style="width:100%;">
+                <source src="WhatsApp Audio 2026-10-10 at 14.58.15.mp4" type="audio/mp4">
+            </audio>
+        </div>
+        <button class="btn-pink" onclick="nextStep(7)">See your last surprise ➔</button>
+    </div>
+
+    <!-- STEP 7: Interactive Question -->
+    <div class="step" id="step7">
+        <span class="tag">✦ Important Question ✦</span>
+        <h1>Will you stay with me <span>forever?</span> 🥺</h1>
+        <div class="cake-box" style="font-size:50px;">🧸</div>
+        <div class="question-box">
+            <button class="btn-pink" onclick="nextStep(8)">Yes!</button>
+            <button class="btn-no" id="noBtn" onmouseover="moveNoBtn()" onclick="moveNoBtn()">No</button>
+        </div>
+    </div>
+
+    <!-- STEP 8: Celebration Yes! -->
+    <div class="step" id="step8">
+        <span class="tag">✦ IT IS A YES! ✦</span>
+        <h1>Knew you would <br><span>say yes! ❤️</span></h1>
+        <div class="cake-box" style="font-size:70px;">🐱💖</div>
+        <p class="subtitle">Welcome twenty one cute girl! I love you so much 💕🌸🩷</p>
+    </div>
+
+</div>
+
+<script>
+    function nextStep(stepNum) {
+        document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+        document.getElementById('step' + stepNum).classList.add('active');
+        if(stepNum === 8) { launchConfetti(); }
+    }
+
+    function blowCandle() {
+        document.getElementById('flame').classList.add('off');
+        launchConfetti();
+        document.getElementById('cakeTitle').innerHTML = "Happy Birthday, <br><span>queen! 🎂</span>";
+        document.getElementById('candleBtn').innerText = "Light It Again 🕯️";
+        document.getElementById('candleBtn').onclick = function() {
+            document.getElementById('flame').classList.remove('off');
+            nextStep(3);
+        };
+    }
+
+    function moveNoBtn() {
+        let btn = document.getElementById('noBtn');
+        btn.innerText = "Really?! 🥺";
+        let x = Math.random() * (window.innerWidth < 400 ? 100 : 200) - 50;
+        let y = Math.random() * 100 - 50;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function launchConfetti() {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff4081', '#e91e63', '#ffffff'] });
+    }
+</script>
+</body>
+</html>
